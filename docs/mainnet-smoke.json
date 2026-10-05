@@ -1,0 +1,118 @@
+{
+  "chainId": 5042,
+  "safeDeal": "0x72f41a9206105F79cFDa6Fd9270A519B681e2ec4",
+  "usdc": "0x3600000000000000000000000000000000000000",
+  "dealId": 1,
+  "wallets": {
+    "client": "0x4Ff5DF25aC60E254258421899992419b61cB1F11",
+    "freelancer": "0x1D4414cC829C286De77ED60ED562cc49E029EE6D",
+    "arbiter": "0xb27a6b59542B7Be7fC914206795E0717d247A6f5"
+  },
+  "milestoneUnits": 50000,
+  "transactions": [
+    {
+      "step": "gas top-up for provider",
+      "by": "client",
+      "tx": "0xcb52b818a63035084e4bcf6e0590fb320e666fce6f57133aa4f6a2fdf0affca6",
+      "block": 24415439,
+      "gasUsed": 21000,
+      "effectiveGasPrice": 20000017612
+    },
+    {
+      "step": "gas top-up for arbiter",
+      "by": "client",
+      "tx": "0x7cafa55fcc8942397458520b9de97081c6f7bec3f38dd8d2a19aa570752ef709",
+      "block": 24415446,
+      "gasUsed": 21000,
+      "effectiveGasPrice": 20000013806
+    },
+    {
+      "step": "createDealWithPermit (1 tx)",
+      "by": "client",
+      "tx": "0xbe4f98e76f15e89a57518d4eaede1983b403f17686816ddc39f25b54450d12e4",
+      "block": 24415459,
+      "gasUsed": 588515,
+      "effectiveGasPrice": 20000017612
+    },
+    {
+      "step": "accept",
+      "by": "provider",
+      "tx": "0x06ecc072e5947fe20f279e33c4e6b23107ea08d99e79a996b4c0f5707c058c81",
+      "block": 24415466,
+      "gasUsed": 30487,
+      "effectiveGasPrice": 20000017612
+    },
+    {
+      "step": "deliver milestone 1",
+      "by": "provider",
+      "tx": "0xcc5534dbae1575f1930c371177ebf4816c9a243c04f3927738497e4633e2408d",
+      "block": 24415472,
+      "gasUsed": 62687,
+      "effectiveGasPrice": 20000017612
+    },
+    {
+      "step": "approveMilestone 1 (client)",
+      "by": "client",
+      "tx": "0xe3b7deba18977b3f904d99bf7e56d2b5b9f6fe399692b3381afb2b31cfa9f154",
+      "block": 24415477,
+      "gasUsed": 92150,
+      "effectiveGasPrice": 20000017612
+    },
+    {
+      "step": "deliver milestone 2",
+      "by": "provider",
+      "tx": "0x3aadcf9ca46e93d46b4b687aab405e3fb7f49d3141e9125d54320b2036ceb0b3",
+      "block": 24415483,
+      "gasUsed": 63437,
+      "effectiveGasPrice": 20000017612
+    },
+    {
+      "step": "releaseAfterReview 2 (third party)",
+      "by": "arbiter",
+      "tx": "0xe29445bbb2a5c8d311c6b694cddd32eaaf16b56c77ec8d03c8373d91ddf32ef8",
+      "block": 24415613,
+      "gasUsed": 92395,
+      "effectiveGasPrice": 20000017612
+    },
+    {
+      "step": "deliver milestone 3",
+      "by": "provider",
+      "tx": "0x26146982ddf9f0b781460ccc0df93bec01cfb23181ea5efbc2fc48dbba1e5b9e",
+      "block": 24415618,
+      "gasUsed": 61985,
+      "effectiveGasPrice": 20000017612
+    },
+    {
+      "step": "dispute milestone 3 (client)",
+      "by": "client",
+      "tx": "0x1b3464e15dc442c0dfde6c26f709c93f8bff42fbcd113caa3cf1388477be45f5",
+      "block": 24415624,
+      "gasUsed": 45254,
+      "effectiveGasPrice": 20000017307
+    },
+    {
+      "step": "resolve 3 (arbiter: 60/40)",
+      "by": "arbiter",
+      "tx": "0x78c3ccb7841de26a3ec0a674bb6e8242e8a019a1f55fb8d102ad88f473289cf1",
+      "block": 24415629,
+      "gasUsed": 108330,
+      "effectiveGasPrice": 20000017612
+    },
+    {
+      "step": "sweep provider -> client",
+      "by": "provider",
+      "tx": "0xe51ca999449e3edd022da8e889a67b1ae064c6a446839e966c47ec3ad29d9df6",
+      "block": 24415640,
+      "gasUsed": 21000,
+      "effectiveGasPrice": 20000017612
+    },
+    {
+      "step": "sweep arbiter -> client",
+      "by": "arbiter",
+      "tx": "0x4273c27cbca71f7c8a6fc6ab48bf9201953ff00952862be3f9a830296057eff7",
+      "block": 24415646,
+      "gasUsed": 21000,
+      "effectiveGasPrice": 20000017612
+    }
+  ]
+}

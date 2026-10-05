@@ -1,0 +1,240 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>SafeDeal — milestone escrow for freelance work, in USDC on Arc</title>
+  <meta name="description" content="Fund a freelance job in USDC or EURC, pay per milestone, auto-release after review, disputes by an arbiter you both chose. A smart contract on Arc holds the money — no platform, no fees.">
+  <link rel="icon" href="favicon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="styles.css">
+  <script src="vendor/ethers.umd.min.js"></script>
+  <script src="vendor/qrcode.js"></script>
+  <script src="config.js"></script>
+  <script src="app.js" defer></script>
+</head>
+<body>
+  <header class="top">
+    <a class="brand" href="#/">Safe<span>Deal</span></a>
+    <nav>
+      <a href="#/" data-nav="new">New deal</a>
+      <a href="#/my" data-nav="my">My deals</a>
+    </nav>
+    <div class="spacer"></div>
+    <span class="badge" id="net-badge">…</span>
+    <button class="secondary" id="btn-connect" type="button">Connect wallet</button>
+  </header>
+
+  <main>
+    <!-- ============================================================ NEW DEAL -->
+    <section id="view-new" hidden>
+      <div class="card hero">
+        <h1>Escrow for freelance work, in USDC on Arc</h1>
+        <p class="lead">The client locks the budget in a smart contract. The freelancer is paid milestone by milestone — when the client approves, or automatically once the review period ends without a dispute. No platform holds the money and nobody takes a fee.</p>
+        <ul class="points">
+          <li><b>Each side can always give money to the other.</b> Taking money needs the other side's consent, an expired timer, or the arbiter.</li>
+          <li><b>Disputes</b> go to an arbiter you both agreed on — or you settle on a split. Unresolved for 30 days: split 50/50.</li>
+          <li><b>One signature + one transaction</b> funds the deal. Gas is paid in USDC, about a cent.</li>
+        </ul>
+      </div>
+
+      <div class="card" id="proposal-banner" hidden>
+        <div class="status warn" id="proposal-text"></div>
+      </div>
+
+      <div class="card">
+        <div class="row">
+          <h2>Create a deal</h2>
+          <div class="seg shrink" role="tablist">
+            <button type="button" class="seg-btn active" id="mode-client" data-mode="client">I'm the client</button>
+            <button type="button" class="seg-btn" id="mode-provider" data-mode="provider">I'm the freelancer</button>
+          </div>
+        </div>
+        <p class="hint" id="mode-hint">You fund the deal now. The freelancer accepts it, then delivers milestone by milestone.</p>
+        <form id="form-deal" novalidate>
+          <div class="two">
+            <div>
+              <label for="in-provider" id="lbl-provider">Freelancer's address</label>
+              <input id="in-provider" class="mono" placeholder="0x…" autocomplete="off" spellcheck="false">
+            </div>
+            <div>
+              <label for="in-arbiter">Arbiter <span class="hint">— optional, agreed by both</span></label>
+              <input id="in-arbiter" class="mono" placeholder="0x… or leave empty" autocomplete="off" spellcheck="false">
+            </div>
+          </div>
+          <div class="two">
+            <div>
+              <label for="in-title">Title <span class="hint">— up to 64 bytes</span></label>
+              <input id="in-title" maxlength="64" placeholder="Landing page for Acme" autocomplete="off">
+            </div>
+            <div>
+              <label for="in-token">Currency</label>
+              <select id="in-token"></select>
+            </div>
+          </div>
+
+          <label>Milestones <span class="hint">— 1 to 10; each is paid separately</span></label>
+          <div id="milestones"></div>
+          <div class="row ms-foot">
+            <button class="ghost shrink" type="button" id="btn-add-ms">+ Add milestone</button>
+            <div class="total">Total: <b id="out-total">0</b></div>
+          </div>
+
+          <div class="two">
+            <div>
+              <label for="in-deadline">Delivery deadline <span class="hint">— from funding</span></label>
+              <select id="in-deadline">
+                <option value="600">10 minutes (demo)</option>
+                <option value="86400">1 day</option>
+                <option value="259200">3 days</option>
+                <option value="604800">1 week</option>
+                <option value="1209600" selected>2 weeks</option>
+                <option value="2592000">30 days</option>
+                <option value="5184000">60 days</option>
+                <option value="7776000">90 days</option>
+              </select>
+            </div>
+            <div>
+              <label for="in-review">Review period <span class="hint">— after each delivery</span></label>
+              <select id="in-review">
+                <option value="60">1 minute (demo)</option>
+                <option value="3600">1 hour</option>
+                <option value="86400">1 day</option>
+                <option value="259200" selected>3 days</option>
+                <option value="604800">7 days</option>
+                <option value="1209600">14 days</option>
+              </select>
+            </div>
+          </div>
+
+          <label for="in-terms">Terms <span class="hint">— optional; the text is published on-chain and its hash is stored with the deal</span></label>
+          <textarea id="in-terms" rows="3" maxlength="4096" placeholder="Scope, acceptance criteria, links…"></textarea>
+
+          <div class="summary" id="deal-summary"></div>
+
+          <div id="client-actions">
+            <button class="big" type="submit" id="btn-fund-permit">Fund deal — sign &amp; pay in 1 transaction</button>
+            <button class="ghost wide" type="button" id="btn-fund-approve">Or: approve, then fund (2 transactions)</button>
+          </div>
+          <div id="provider-actions" hidden>
+            <button class="big" type="button" id="btn-proposal">Create proposal link</button>
+            <p class="hint">No transaction: your client opens the link, checks the terms and funds the deal. You accept it on-chain afterwards.</p>
+          </div>
+          <div class="status" id="new-status" hidden></div>
+        </form>
+      </div>
+
+      <div class="card" id="share-card" hidden>
+        <h2 id="share-title">Share</h2>
+        <div class="result">
+          <img class="qr" id="qr-img" alt="QR code with the link">
+          <div>
+            <label for="out-link" id="share-label">Link</label>
+            <div class="row">
+              <input id="out-link" class="mono" readonly>
+              <button class="secondary shrink" type="button" id="btn-copy">Copy</button>
+            </div>
+            <p><a id="out-open" href="#" target="_blank" rel="noopener">Open ↗</a></p>
+            <p class="hint" id="share-hint"></p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============================================================ DEAL -->
+    <section id="view-deal" hidden>
+      <div class="card">
+        <div class="row">
+          <div><span class="hint" id="dl-id">Deal</span> <span class="role" id="dl-role" hidden></span></div>
+          <div class="shrink"><span class="pill" id="dl-pill">Loading…</span></div>
+        </div>
+        <h1 id="dl-title">—</h1>
+        <div class="amount" id="dl-amount">—</div>
+        <div class="progress" id="dl-progress"><div class="bar"><span id="dl-bar"></span></div><span class="hint" id="dl-progress-text"></span></div>
+        <dl class="kv">
+          <dt>Client</dt><dd class="mono" id="dl-client"></dd>
+          <dt>Freelancer</dt><dd class="mono" id="dl-provider"></dd>
+          <dt>Arbiter</dt><dd id="dl-arbiter"></dd>
+          <dt>Delivery deadline</dt><dd id="dl-deadline"></dd>
+          <dt>Review period</dt><dd id="dl-review"></dd>
+          <dt>Terms</dt><dd id="dl-terms"></dd>
+          <dt>Network</dt><dd id="dl-network"></dd>
+        </dl>
+        <div class="actions deal-actions" id="dl-actions"></div>
+        <div class="status" id="claim-box" hidden></div>
+      </div>
+
+      <div class="card" id="dl-share" hidden>
+        <h2>Send this deal to the freelancer</h2>
+        <div class="result">
+          <img class="qr" id="dl-qr" alt="QR code with the deal link">
+          <div>
+            <label for="dl-link">Deal link</label>
+            <div class="row">
+              <input id="dl-link" class="mono" readonly>
+              <button class="secondary shrink" type="button" id="btn-copy-deal">Copy</button>
+            </div>
+            <p class="hint">The money is already locked in the contract. Until the freelancer accepts, you can cancel and get everything back.</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="row">
+          <h2>Milestones</h2>
+          <button class="ghost shrink" type="button" id="btn-refresh-deal">Refresh</button>
+        </div>
+        <table id="ms-table">
+          <thead><tr><th>#</th><th>Milestone</th><th>Amount</th><th>Status</th><th>Actions</th></tr></thead>
+          <tbody id="ms-rows"></tbody>
+        </table>
+
+        <div class="panel" id="action-panel" hidden>
+          <h3 id="ap-title"></h3>
+          <p class="hint" id="ap-hint"></p>
+          <div id="ap-text-wrap">
+            <label for="ap-text" id="ap-text-label">Note</label>
+            <input id="ap-text" autocomplete="off" maxlength="512">
+          </div>
+          <div id="ap-amount-wrap">
+            <label for="ap-amount" id="ap-amount-label">Freelancer gets</label>
+            <div class="row">
+              <input id="ap-amount" inputmode="decimal" autocomplete="off">
+              <span class="shrink hint" id="ap-amount-rest"></span>
+            </div>
+          </div>
+          <div id="ap-days-wrap">
+            <label for="ap-days">Add days</label>
+            <input id="ap-days" inputmode="numeric" value="7" autocomplete="off">
+          </div>
+          <div class="row ap-buttons">
+            <button type="button" id="ap-confirm">Confirm</button>
+            <button type="button" class="ghost shrink" id="ap-cancel">Close</button>
+          </div>
+        </div>
+        <div class="status" id="deal-status" hidden></div>
+      </div>
+    </section>
+
+    <!-- ============================================================ MY DEALS -->
+    <section id="view-my" hidden>
+      <div class="card">
+        <h1>My deals</h1>
+        <p class="lead">Every deal where you are the client, the freelancer or the arbiter — read straight from the contract.</p>
+        <div class="status" id="my-claims" hidden></div>
+        <div class="status" id="my-status">Connect your wallet to see your deals.</div>
+        <table id="my-table" hidden>
+          <thead><tr><th>Deal</th><th>Your role</th><th>Amount</th><th>Status</th><th>Next step</th></tr></thead>
+          <tbody id="my-rows"></tbody>
+        </table>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    SafeDeal runs on <a href="https://arc.io" target="_blank" rel="noopener">Arc</a> — USDC is the gas token, so clients and freelancers only ever hold stablecoins.
+    Contract: <a id="ft-contract" href="#" target="_blank" rel="noopener">—</a> ·
+    <a href="https://github.com/Minkhanov/safedeal-arc" target="_blank" rel="noopener" id="ft-source">Source</a><br>
+    Experimental, unaudited software. Deal titles, terms and notes are public on-chain — do not put personal data in them. Not legal or financial advice.
+  </footer>
+</body>
+</html>
