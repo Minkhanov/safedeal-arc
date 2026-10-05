@@ -1156,12 +1156,14 @@
   async function route() {
     stopPoll();
     closePanel();
-    await initNetwork();
     const { path, params } = parseHash();
     for (const v of ["new", "deal", "my"]) $(`view-${v}`).hidden = true;
     document.querySelectorAll("nav a").forEach((a) => a.classList.remove("active"));
     const activate = (name) => { const a = document.querySelector(`nav a[data-nav="${name}"]`); if (a) a.classList.add("active"); };
+    const isHome = !/^\/(deal|my)/.test(path);
+    $("intro").hidden = !isHome;
     try {
+      await initNetwork();
       const m = path.match(/^\/deal\/(\d+)$/);
       if (m) {
         $("view-deal").hidden = false;
@@ -1192,6 +1194,11 @@
       try { await connectWallet(); await route(); } catch (e) { toast(friendlyError(e)); }
     });
     $("form-deal").addEventListener("submit", onFundPermit);
+    $("cta-create").addEventListener("click", (ev) => {
+      ev.preventDefault(); // keep the hash router's URL; just scroll to the form
+      if (!/^#\/?($|new)/.test(window.location.hash || "#/")) window.location.hash = "#/";
+      setTimeout(() => $("form-deal").scrollIntoView({ behavior: "smooth", block: "start" }), 50);
+    });
     $("btn-fund-approve").addEventListener("click", onFundApprove);
     $("btn-proposal").addEventListener("click", onProposal);
     $("btn-add-ms").addEventListener("click", () => { addMilestoneRow(); updateSummary(); });
@@ -1217,14 +1224,16 @@
       });
       window.ethereum.on("chainChanged", () => { state.signer = null; });
     }
-    // Reconnect silently if the wallet already authorised this site.
+    // Reconnect silently if the wallet already authorised this site. A locked or slow wallet must
+    // never keep the page blank, so the page renders after at most 1.5 s either way.
     if (window.ethereum) {
-      window.ethereum.request({ method: "eth_accounts" }).then((accs) => {
+      const accounts = window.ethereum.request({ method: "eth_accounts" }).then((accs) => {
         if (accs && accs[0]) {
           state.account = ethers.getAddress(accs[0]);
           $("btn-connect").textContent = short(state.account);
         }
-      }).catch(() => {}).finally(route);
+      }).catch(() => {});
+      Promise.race([accounts, sleep(1500)]).finally(route);
     } else {
       route();
     }

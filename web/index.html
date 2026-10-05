@@ -25,18 +25,30 @@
   </header>
 
   <main>
+    <!-- ============================================================ INTRO (static: readable without a wallet or JS) -->
+    <section id="intro" class="card hero">
+      <h1>Escrow for freelance work, in USDC on Arc</h1>
+      <p class="lead">The client locks the budget in a smart contract, split into milestones. The freelancer is paid per milestone — on approval, automatically after the review period, or by an arbiter's split in a dispute. No platform holds the money and nobody takes a fee.</p>
+      <ol class="steps">
+        <li><b>1 · Deposit</b><span>The client funds the deal in USDC or EURC with one signature and one transaction.</span></li>
+        <li><b>2 · Deliver</b><span>The freelancer accepts, then delivers each milestone with a link to the work.</span></li>
+        <li><b>3 · Get paid</b><span>The client approves — or the payment releases itself after the review period. Disputes go to the arbiter both chose.</span></li>
+      </ol>
+      <div class="cta">
+        <a class="btn" href="#/deal/1?c=5042" id="cta-deal">Open live mainnet deal #1</a>
+        <a class="btn ghost" href="https://github.com/Minkhanov/safedeal-arc" target="_blank" rel="noopener">Source on GitHub</a>
+        <a class="btn ghost" href="#form-deal" id="cta-create">Create a deal ↓</a>
+      </div>
+      <p class="contract-line">Contract on Arc mainnet (chain 5042):
+        <a class="mono" href="https://explorer.arc.io/address/0x72f41a9206105F79cFDa6Fd9270A519B681e2ec4" target="_blank" rel="noopener">0x72f41a9206105F79cFDa6Fd9270A519B681e2ec4</a>
+        · <a href="https://explorer.arc.io/address/0x72f41a9206105F79cFDa6Fd9270A519B681e2ec4" target="_blank" rel="noopener">Explorer</a>
+        · <a href="https://sourcify.dev/#/lookup/0x72f41a9206105F79cFDa6Fd9270A519B681e2ec4" target="_blank" rel="noopener">Sourcify: verified, exact match</a>
+      </p>
+      <p class="hint">No wallet needed to look around: deal pages are read straight from Arc mainnet. Connect a wallet only to create or act on a deal.</p>
+    </section>
+
     <!-- ============================================================ NEW DEAL -->
     <section id="view-new" hidden>
-      <div class="card hero">
-        <h1>Escrow for freelance work, in USDC on Arc</h1>
-        <p class="lead">The client locks the budget in a smart contract. The freelancer is paid milestone by milestone — when the client approves, or automatically once the review period ends without a dispute. No platform holds the money and nobody takes a fee.</p>
-        <ul class="points">
-          <li><b>Each side can always give money to the other.</b> Taking money needs the other side's consent, an expired timer, or the arbiter.</li>
-          <li><b>Disputes</b> go to an arbiter you both agreed on — or you settle on a split. Unresolved for 30 days: split 50/50.</li>
-          <li><b>One signature + one transaction</b> funds the deal. Gas is paid in USDC, about a cent.</li>
-        </ul>
-      </div>
-
       <div class="card" id="proposal-banner" hidden>
         <div class="status warn" id="proposal-text"></div>
       </div>
@@ -232,7 +244,8 @@
 
   <footer>
     SafeDeal runs on <a href="https://arc.io" target="_blank" rel="noopener">Arc</a> — USDC is the gas token, so clients and freelancers only ever hold stablecoins.
-    Contract: <a id="ft-contract" href="#" target="_blank" rel="noopener">—</a> ·
+    Contract: <a id="ft-contract" href="https://explorer.arc.io/address/0x72f41a9206105F79cFDa6Fd9270A519B681e2ec4" target="_blank" rel="noopener">0x72f4…2ec4</a>
+    (<a href="https://sourcify.dev/#/lookup/0x72f41a9206105F79cFDa6Fd9270A519B681e2ec4" target="_blank" rel="noopener">verified</a>) ·
     <a href="https://github.com/Minkhanov/safedeal-arc" target="_blank" rel="noopener" id="ft-source">Source</a><br>
     Experimental, unaudited software. Deal titles, terms and notes are public on-chain — do not put personal data in them. Not legal or financial advice.
   </footer>
