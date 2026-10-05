@@ -1,5 +1,7 @@
 # SafeDeal — milestone escrow for freelance work, in USDC on Arc
 
+[![test](https://github.com/Minkhanov/safedeal-arc/actions/workflows/test.yml/badge.svg)](https://github.com/Minkhanov/safedeal-arc/actions/workflows/test.yml)
+
 SafeDeal lets a client and a freelancer do business without trusting each other or a platform. The client
 locks the budget in a smart contract, split into milestones. The freelancer accepts the deal, delivers each
 milestone and gets paid when the client approves it — or automatically once the review period ends without a
