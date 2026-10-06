@@ -58,6 +58,9 @@ milestone closes, the deal is `Closed`. No path leaves money stuck, unless a par
 
 ## Demo
 
+Demo video (88 s): https://minkhanov.github.io/safedeal-arc/media/safedeal_demo.mp4 —
+[English subtitles](https://minkhanov.github.io/safedeal-arc/media/safedeal_demo.en.srt).
+
 Screenshots from the automated browser run on a local devnet (`e2e/test_e2e.py`):
 
 | Freelancer writes a proposal (no tx) | Client checks it and funds (1 tx) | Client approves milestone 1 |

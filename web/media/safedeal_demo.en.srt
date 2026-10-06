@@ -1,0 +1,131 @@
+1
+00:00:00,656 --> 00:00:03,608
+SafeDeal: milestone escrow for freelance work,
+
+2
+00:00:03,628 --> 00:00:05,396
+paid in USDC on Arc.
+
+3
+00:00:06,041 --> 00:00:08,591
+This is a real deal on Arc mainnet:
+
+4
+00:00:08,611 --> 00:00:10,289
+funded in one transaction,
+
+5
+00:00:10,309 --> 00:00:12,066
+paid out three different ways.
+
+6
+00:00:13,110 --> 00:00:15,563
+Open source, verified on Sourcify.
+
+7
+00:00:16,731 --> 00:00:19,034
+Here is the full flow on a local devnet,
+
+8
+00:00:19,054 --> 00:00:20,138
+with test accounts.
+
+9
+00:00:21,194 --> 00:00:24,064
+The freelancer writes the proposal and sends a link.
+
+10
+00:00:24,084 --> 00:00:25,923
+No transaction, no fee.
+
+11
+00:00:27,229 --> 00:00:28,730
+The client checks the terms,
+
+12
+00:00:28,750 --> 00:00:33,247
+and locks 500 USDC with one signature and one transaction.
+
+13
+00:00:33,267 --> 00:00:35,566
+On Arc, gas is paid in USDC.
+
+14
+00:00:36,872 --> 00:00:38,373
+The freelancer accepts.
+
+15
+00:00:38,393 --> 00:00:39,222
+From now on,
+
+16
+00:00:39,242 --> 00:00:42,119
+the client can no longer cancel the deal alone.
+
+17
+00:00:42,139 --> 00:00:44,178
+The freelancer delivers, with a link.
+
+18
+00:00:46,589 --> 00:00:47,695
+The client approves.
+
+19
+00:00:47,715 --> 00:00:48,426
+Paid.
+
+20
+00:00:48,446 --> 00:00:49,684
+Final in under a second.
+
+21
+00:00:51,078 --> 00:00:52,603
+If the client stays silent,
+
+22
+00:00:52,623 --> 00:00:54,167
+the review period runs out.
+
+23
+00:00:56,740 --> 00:00:59,416
+Then anyone can release the payment to the freelancer.
+
+24
+00:01:01,310 --> 00:01:03,940
+Disputes go to the arbiter both sides chose.
+
+25
+00:01:05,760 --> 00:01:08,382
+The arbiter can only split the money between them,
+
+26
+00:01:08,402 --> 00:01:09,203
+never take it.
+
+27
+00:01:13,410 --> 00:01:15,796
+Each side can always give money to the other.
+
+28
+00:01:15,816 --> 00:01:18,178
+Taking money needs consent, a timer,
+
+29
+00:01:18,198 --> 00:01:19,216
+or the arbiter.
+
+30
+00:01:19,236 --> 00:01:20,875
+No platform, no fees.
+
+31
+00:01:22,181 --> 00:01:23,033
+SafeDeal.
+
+32
+00:01:23,053 --> 00:01:24,366
+Live on Arc mainnet.
+
+33
+00:01:24,386 --> 00:01:25,506
+Links in the description.
